@@ -29,9 +29,16 @@ async function run() {
         client.connect();
 
         const CustomerCollection = client.db('kidCastleDB').collection('CustomerSays');
+        const NewsCollection = client.db('kidCastleDB').collection('NewsAndEvents');
 
         app.get('/customerSays', async (req, res) => {
             const cursor = CustomerCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+
+        app.get('/news&events', async (req, res) => {
+            const cursor = NewsCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
