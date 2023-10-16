@@ -30,6 +30,7 @@ async function run() {
 
         const CustomerCollection = client.db('kidCastleDB').collection('CustomerSays');
         const NewsCollection = client.db('kidCastleDB').collection('NewsAndEvents');
+        const ProductCollection = client.db('kidCastleDB').collection('Products');
 
         app.get('/customerSays', async (req, res) => {
             const cursor = CustomerCollection.find();
@@ -40,6 +41,12 @@ async function run() {
         app.get('/news&events', async (req, res) => {
             const cursor = NewsCollection.find();
             const result = await cursor.toArray();
+            res.send(result);
+        });
+
+        app.post('/products', async (req, res) => {
+            const singleProduct = req.body;
+            const result = await ProductCollection.insertOne(singleProduct);
             res.send(result);
         })
 
