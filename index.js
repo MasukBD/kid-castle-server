@@ -49,10 +49,26 @@ async function run() {
             if (req.query?.email) {
                 query = { email: req.query.email }
             }
-            const cursor = ProductCollection.find(query);
-            const result = await cursor.toArray();
-            res.send(result);
+            if (req.query?.page && req.query?.limit) {
+                const page = parseInt(req.query.page);
+                const limit = parseInt(req.query.limit);
+                const skip = (page - 1) * limit;
+                const cursor = ProductCollection.find(query).skip(skip).limit(limit);
+                const result = await cursor.toArray();
+                res.send(result);
+            }
+            else {
+                const cursor = ProductCollection.find(query);
+                const result = await cursor.toArray();
+                res.send(result);
+            }
         });
+
+
+        app.get('/productCount', async (req, res) => {
+            const result = await ProductCollection.estimatedDocumentCount();
+            res.send({ numberOfProduct: result })
+        })
 
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
