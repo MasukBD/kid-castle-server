@@ -46,14 +46,23 @@ async function run() {
 
         app.get('/products', async (req, res) => {
             let query = {};
+            const sort = req.query?.sort;
+            const search = req.query?.search;
+            console.log(search)
+            const options = {
+                sort: { "price": sort == 'true' ? 1 : -1 }
+            }
             if (req.query?.email) {
                 query = { email: req.query.email }
+            }
+            if (req.query?.search) {
+                query = { productName: { $regex: search, $options: 'i' } }
             }
             if (req.query?.page && req.query?.limit) {
                 const page = parseInt(req.query.page);
                 const limit = parseInt(req.query.limit);
                 const skip = (page - 1) * limit;
-                const cursor = ProductCollection.find(query).skip(skip).limit(limit);
+                const cursor = ProductCollection.find(query, options).skip(skip).limit(limit);
                 const result = await cursor.toArray();
                 res.send(result);
             }
