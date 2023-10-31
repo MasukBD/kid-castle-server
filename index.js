@@ -48,7 +48,7 @@ async function run() {
             let query = {};
             const sort = req.query?.sort;
             const search = req.query?.search;
-            console.log(search)
+
             const options = {
                 sort: { "price": sort == 'true' ? 1 : -1 }
             }
@@ -56,7 +56,7 @@ async function run() {
                 query = { email: req.query.email }
             }
             if (req.query?.search) {
-                query = { productName: { $regex: search, $options: 'i' } }
+                query = { category: { $regex: search, $options: 'i' } }
             }
             if (req.query?.page && req.query?.limit) {
                 const page = parseInt(req.query.page);
